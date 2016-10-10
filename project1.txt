@@ -1,7 +1,7 @@
 variables
 %All of these actions are not the most efficient for this problem.
 t=0.02
-l=25
+l=24
 Ixx1=1/12*t^4
 Ixx2=1/12*(3/4*t)^4
 Ixx3=1/12*(1/2*t)^4
