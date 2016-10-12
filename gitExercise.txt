@@ -1,8 +1,10 @@
 ***
-First sentence is complete. Fill in details of second sentence
+First sentence is complete. Fill in details of second sentence.
+
+What is the tool?
 ***
 
-During spring, the Bob dug a hole in the fields.
+During spring, Bob dug a hole in the fields.
 
 The tool was happy to help with the task.
 
