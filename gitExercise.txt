@@ -1,22 +1,13 @@
-***
-First sentence is complete. Fill in details of second sentence
-***
+Jeremy Geaslen
 
-During spring, the Bob dug a hole in the fields.
-
-The tool was happy to help with the task.
-
-<<<<<<< HEAD
 The main character's name is "Bob". He was helping Famer Pickles with his (Bob's) team.
 A Bakhoe named "Scoop" was the tool used as part of making the fence.
 When they all had a mement, "Scoop" said somthing.
 Bob said the second thing.
 During a particular season, the main character did something in the fields.
-=======
->>>>>>> origin/master
 
 
 Mayank Patel
 
-During spring, the someone dug a hole in the fields. Another person said "What a beautiful spring day it is!".
-Game was "hide-and-seek"
+
+
