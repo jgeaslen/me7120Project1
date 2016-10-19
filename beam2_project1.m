@@ -1,4 +1,4 @@
-function out=beam3example(mode,b,c,d,e)
+function out=beam2_project1(mode,b,c,d,e)
   
 % BEAM3 does as listed below. It is an Euler-Bernoulli
 % beam/rod/torsion model. 
@@ -58,7 +58,7 @@ global surfs
 out=0;
 if strcmp(mode,'numofnodes')
     % This allows a code to find out how many nodes this element has
-    out=3;
+    out=2;
 end
 if strcmp(mode,'generate')
   elnum=c;%When this mode is called, the element number is the 3rd
@@ -70,17 +70,17 @@ if strcmp(mode,'generate')
   
           %There have to be 5 elements for this element's
           %definition (above)
-  if length(b)==5
-      element(elnum).nodes=b(1:3);
-      %If the user puts the middle node in the wrong place, tell them.
-      if norm((nodes(b(1),:)+nodes(b(2),:))/2-nodes(b(3),:))/ ...
-              norm(nodes(b(1),:)-nodes(b(2),:))>.001
-          disp(['WARNING: Node ' num2str(b(3)) ...
-                ' is not in the middle of element ' ...
-                num2str(elnum) ' on line ' num2str(curlineno) '.'])
-      end
-      element(elnum).properties=b(5);
-      element(elnum).point=b(4);
+  if length(b)==4
+      element(elnum).nodes=b(1:2);
+%       %If the user puts the middle node in the wrong place, tell them.
+%       if norm((nodes(b(1),:)+nodes(b(2),:))/2-nodes(b(3),:))/ ...
+%               norm(nodes(b(1),:)-nodes(b(2),:))>.001
+%           disp(['WARNING: Node ' num2str(b(3)) ...
+%                 ' is not in the middle of element ' ...
+%                 num2str(elnum) ' on line ' num2str(curlineno) '.'])
+%       end
+      element(elnum).properties=b(4);
+      element(elnum).point=b(3);
   else 
 	  b
       %There have to be five numbers on a line defining the
@@ -133,22 +133,18 @@ if strcmp(mode,'make')||strcmp(mode,'istrainforces')
                                               % need for your use. 
   
 % 
-  if length(bprops)==15
+  if length(bprops)==11
       E=bprops(1);
       G=bprops(2);
       rho=bprops(3);
       A1=bprops(4);
       A2=bprops(5);
-      A3=bprops(6);
-      J1=bprops(7);
-      J2=bprops(8);
-      J3=bprops(9);
-      Izz1=bprops(10);
-      Izz2=bprops(11);
-      Izz3=bprops(12);
-      Iyy1=bprops(13);
-      Iyy2=bprops(14);
-      Iyy3=bprops(15);
+      J1=bprops(6);
+      J2=bprops(7);
+      Izz1=bprops(8);
+      Izz2=bprops(9);
+      Iyy1=bprops(10);
+      Iyy2=bprops(11);
   else
       warndlg(['The number of material properties set for ' ...
                'this element (' num2str(length(bprops)) ') isn''t ' ...
@@ -179,12 +175,9 @@ if strcmp(mode,'make')
   x2=nodes(bnodes(2),1);
   y2=nodes(bnodes(2),2);
   z2=nodes(bnodes(2),3);
-  x3=nodes(bnodes(3),1);
-  y3=nodes(bnodes(3),2);
-  z3=nodes(bnodes(3),3);
-  x4=points(bnodes(4),1);
-  y4=points(bnodes(4),2);
-  z4=points(bnodes(4),3);
+  x3=points(bnodes(3),1);
+  y3=points(bnodes(3),2);
+  z3=points(bnodes(3),3);
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -193,6 +186,8 @@ if strcmp(mode,'make')
   %
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % Shape functions in matrix polynomial form (polyval style) for bending
+  % Need to derive these and change below
+  % Should be 4 shape functions, each a 1 x 4 matrix
   bn1 =  [  0.750  -0.500  -1.250   1.000   0.000   0.000];
   bn1d =  [3.75000  -2.00000  -3.75000   2.00000   0.00000];
   bn1dd =  [   15.00   -6.00   -7.50    2.00];
@@ -205,24 +200,25 @@ if strcmp(mode,'make')
   bn4 =  [ 0.250   0.250  -0.250  -0.250   0.000   0.000];
   bn4d = [ 1.25000   1.00000  -0.75000  -0.50000   0.00000];
   bn4dd =[   5.000   3.000  -1.500  -0.500];
-  bn5 =  [ 0.000   1.000  -0.000  -2.000   0.000   1.000];
-  bn5d = [0.00000   4.00000  -0.00000  -4.00000   0.00000];
-  bn5dd =[   0    1.20e+01   0   -4.00e+00];
-  bn6 =  [ 1.000   0.000  -2.000  -0.000   1.000   0.000];
-  bn6d = [ 5.0000    0.0   -6.0000   0.0    1.0000];
-  bn6dd =[    20.0    0   -12.0  0];
+%   bn5 =  [ 0.000   1.000  -0.000  -2.000   0.000   1.000];
+%   bn5d = [0.00000   4.00000  -0.00000  -4.00000   0.00000];
+%   bn5dd =[   0    1.20e+01   0   -4.00e+00];
+%   bn6 =  [ 1.000   0.000  -2.000  -0.000   1.000   0.000];
+%   bn6d = [ 5.0000    0.0   -6.0000   0.0    1.0000];
+%   bn6dd =[    20.0    0   -12.0  0];
   
   % Shape functions in matrix polynomial form (polyval style) for 
   % torsion/rod
+  % Similar changes to these as above
   rn1=[0.5 -.5 0];
   rn1d=[1 -0.5];
   rn2=[.5 .5 0];
   rn2d=[1 0.5];
-  rn3=[-1 0 1];
-  rn3d=[-2 0];
+%   rn3=[-1 0 1];
+%   rn3d=[-2 0];
   numbeamgauss=5; % Number of Gauss points for integration of beam element
   [bgpts,bgpw]=gauss(numbeamgauss);
-  kb1=zeros(6,6);% For this beam, 3 nodes, 2DOF each, is a 6 by 6
+  kb1=zeros(4,4);% For this beam, 2 nodes, 2DOF each, is a 4 by 4
                  % matrix. 
   kb2=kb1; %Stiffness matrix for the x-z plane beam element. 
   l=norm([x2 y2 z2]-[x1 y1 z1]);
