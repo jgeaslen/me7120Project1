@@ -192,6 +192,19 @@ if strcmp(mode,'make')
   bn4 =   [-0.250   -0.250  0.250  0.250];
   bn4d =  [-0.25000   0.50  0.750];
   bn4dd = [0.50   1.50];
+  
+  bn1 =    [0.25    0    -0.75    0.5];
+  bn1d =   [0.75    0    -0.75];
+  bn1dd =  [1.5     0];
+  bn2 =    [0.25   -0.25 -0.25    0.25];
+  bn2d =   [0.75   -0.5  -0.25];
+  bn2dd =  [1.5    -0.5];
+  bn3 =    [-0.25   0     0.75    0.5];
+  bn3d =   [-0.75   0     0.75];
+  bn3dd =  [-1.5    0];
+  bn4 =    [0.25    0.25 -0.25   -0.25];
+  bn4d =   [0.75    0.5  -0.25];
+  bn4dd =  [1.5     0.5];
 
   % Shape functions in matrix polynomial form (polyval style) for 
   % torsion/rod
@@ -302,30 +315,26 @@ if strcmp(mode,'make')
   numbeamgauss=numbeamgauss+3; %Need more gauss points for the mass
                                %matrix. 
   [bgpts,bgpw]=gauss(numbeamgauss);
-  mb1=zeros(6,6); %initialize empty mass matrix
+  mb1=zeros(4,4); %initialize empty mass matrix
   % Local Bending in x-y plane
   for i=1:numbeamgauss
     beamsfs=[polyval(bn1,bgpts(i));
              polyval(bn2,bgpts(i))*Jac;
              polyval(bn3,bgpts(i));
-             polyval(bn4,bgpts(i))*Jac;
-             polyval(bn5,bgpts(i));
-             polyval(bn6,bgpts(i))*Jac];
-    A=polyval(rn1*A1+rn2*A2+rn3*A3,bgpts(i));
+             polyval(bn4,bgpts(i))*Jac];
+    A=polyval(rn1*A1+rn2*A2,bgpts(i));
     mb1=mb1+bgpw(i)*beamsfs*beamsfs'*rho*A*Jac;%pause, and reflect
                                                %(OK, this was for debugging)
   end
   
   % Local Bending in x-z plane
-  mb2=zeros(6,6);
+  mb2=zeros(4,4);
   for i=1:numbeamgauss
     beamsfs=[polyval(bn1,bgpts(i));
              -polyval(bn2,bgpts(i))*Jac;
              polyval(bn3,bgpts(i));
-             -polyval(bn4,bgpts(i))*Jac;
-             polyval(bn5,bgpts(i));
-             -polyval(bn6,bgpts(i))*Jac];
-    A=polyval(rn1*A1+rn2*A2+rn3*A3,bgpts(i));
+             -polyval(bn4,bgpts(i))*Jac];
+    A=polyval(rn1*A1+rn2*A2,bgpts(i));
     mb2=mb2+bgpw(i)*beamsfs*beamsfs'*rho*A*Jac;
   end
   
@@ -333,14 +342,13 @@ if strcmp(mode,'make')
   numrodgauss=numrodgauss+1; %Need more gauss points for the mass
                              %matrix. 
   [rgpts,rgpw]=gauss(numrodgauss);
-  mrod=zeros(3,3); %initialize empty mass matrix
-  mtor=zeros(3,3);
+  mrod=zeros(2,2); %initialize empty mass matrix
+  mtor=zeros(2,2);
   for i=1:numrodgauss
     rodsfs=[polyval(rn1,rgpts(i));
-            polyval(rn2,rgpts(i));
-            polyval(rn3,rgpts(i))];
-    J=polyval(rn1*(Iyy1+Izz1)+rn2*(Iyy2+Izz2)+rn3*(Iyy3+Izz3),rgpts(i));
-    A=polyval(rn1*A1+rn2*A2+rn3*A3,rgpts(i));
+            polyval(rn2,rgpts(i))];
+    J=polyval(rn1*(Iyy1+Izz1)+rn2*(Iyy2+Izz2),rgpts(i));
+    A=polyval(rn1*A1+rn2*A2,rgpts(i));
     mrod=mrod+rgpw(i)*rodsfs*rodsfs'*A*rho*Jac;
     mtor=mtor+rgpw(i)*rodsfs*rodsfs'*J*rho*Jac;
   end

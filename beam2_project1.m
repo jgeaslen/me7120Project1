@@ -180,26 +180,27 @@ if strcmp(mode,'make')
   % Shape functions in matrix polynomial form (polyval style) for bending
   % Need to derive these and change below
   % Should be 4 shape functions, each a 1 x 4 matrix
-  bn1 =   [0.5  -0.750  0  0.250];
-  bn1d =  [-0.750   0  0.750];
-  bn1dd = [0   1.50];
-  bn2 =   [0.250  -0.250  0.250   0.250];
-  bn2d =  [-0.250  -0.50  0.750];
-  bn2dd = [-0.50   1.50];
-  bn3 =   [0.50   0.7500   0   -0.250];
-  bn3d =  [0.750   0   -0.750];
-  bn3dd = [0   -1.50];
-  bn4 =   [-0.250   -0.250  0.250  0.250];
-  bn4d =  [-0.25000   0.50  0.750];
-  bn4dd = [0.50   1.50];
+ 
+  bn1 =    [0.25    0    -0.75    0.5];
+  bn1d =   [0.75    0    -0.75];
+  bn1dd =  [1.5     0];
+  bn2 =    [0.25   -0.25 -0.25    0.25];
+  bn2d =   [0.75   -0.5  -0.25];
+  bn2dd =  [1.5    -0.5];
+  bn3 =    [-0.25   0     0.75    0.5];
+  bn3d =   [-0.75   0     0.75];
+  bn3dd =  [-1.5    0];
+  bn4 =    [0.25    0.25 -0.25   -0.25];
+  bn4d =   [0.75    0.5  -0.25];
+  bn4dd =  [1.5     0.5];
 
   % Shape functions in matrix polynomial form (polyval style) for 
   % torsion/rod
   % Similar changes to these as above
-  rn1= [0.5  -0.5];
-  rn1d= -0.5;
+  rn1= [-0.5  0.5];
+  rn1d= [-0.5];
   rn2= [0.5  0.5];
-  rn2d= 0.5;
+  rn2d= [0.5];
 
   numbeamgauss=5; % Number of Gauss points for integration of beam element
   [bgpts,bgpw]=gauss(numbeamgauss);
@@ -344,18 +345,18 @@ if strcmp(mode,'make')
   % stiffness matrix. We're just telling the sub-elements to be put
   % into the correct spots for the total element. 
   k=zeros(18,18);
-  k([2 6 8 12 14 18],[2 6 8 12 14 18])=kb1;
-  k([3 5 9 11 15 17],[3 5 9 11 15 17])=kb2;
-  k([1 7 13],[1 7 13])=krod;
-  k([4 10 16],[4 10 16])=ktor;
+  k([2 6 8 12],[2 6 8 12])=kb1;
+  k([3 5 9 11],[3 5 9 11])=kb2;
+  k([1 7],[1 7])=krod;
+  k([4 10],[4 10])=ktor;
   
   % Assembling each mass matrix into the complete elemental 
   % mass matrix
-  m=zeros(18,18);
-  m([2 6 8 12 14 18],[2 6 8 12 14 18])=mb1;
-  m([3 5 9 11 15 17],[3 5 9 11 15 17])=mb2;
-  m([1 7 13],[1 7 13])=mrod;
-  m([4 10 16],[4 10 16])=mtor;
+  m=zeros(12,12);
+  m([2 6 8 12],[2 6 8 12])=mb1;
+  m([3 5 9 11],[3 5 9 11])=mb2;
+  m([1 7],[1 7])=mrod;
+  m([4 10],[4 10])=mtor;
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %
@@ -365,7 +366,7 @@ if strcmp(mode,'make')
 
   R1=([x2 y2 z2]-[x1 y1 z1]);% Vector along element
   lam1=R1/norm(R1);% Unit direction
-  R2=([x4 y4 z4]-[x1 y1 z1]);% Unit direction to point
+  R2=([x3 y3 z3]-[x1 y1 z1]);% Unit direction to point
   R2perp=R2-dot(R2,lam1)*lam1;% Part of R2 perpendicular to lam1
   udirec=0;
   while norm(R2perp)<10*eps% If R2perp is too small, (point in line
@@ -391,8 +392,7 @@ if strcmp(mode,'make')
   lam(4:6,4:6)=lamloc;
   lam(7:9,7:9)=lamloc;
   lam(10:12,10:12)=lamloc;
-  lam(13:15,13:15)=lamloc;
-  lam(16:18,16:18)=lamloc;
+
   
 % $$$     lam=[lamloc z z z z z;
 % $$$          z lamloc z z z z;
