@@ -302,26 +302,30 @@ if strcmp(mode,'make')
   numbeamgauss=numbeamgauss+3; %Need more gauss points for the mass
                                %matrix. 
   [bgpts,bgpw]=gauss(numbeamgauss);
-  mb1=zeros(4,4); %initialize empty mass matrix
+  mb1=zeros(6,6); %initialize empty mass matrix
   % Local Bending in x-y plane
   for i=1:numbeamgauss
     beamsfs=[polyval(bn1,bgpts(i));
              polyval(bn2,bgpts(i))*Jac;
              polyval(bn3,bgpts(i));
-             polyval(bn4,bgpts(i))*Jac];
-    A=polyval(rn1*A1+rn2*A2,bgpts(i));
+             polyval(bn4,bgpts(i))*Jac;
+             polyval(bn5,bgpts(i));
+             polyval(bn6,bgpts(i))*Jac];
+    A=polyval(rn1*A1+rn2*A2+rn3*A3,bgpts(i));
     mb1=mb1+bgpw(i)*beamsfs*beamsfs'*rho*A*Jac;%pause, and reflect
                                                %(OK, this was for debugging)
   end
   
   % Local Bending in x-z plane
-  mb2=zeros(4,4);
+  mb2=zeros(6,6);
   for i=1:numbeamgauss
     beamsfs=[polyval(bn1,bgpts(i));
              -polyval(bn2,bgpts(i))*Jac;
              polyval(bn3,bgpts(i));
-             -polyval(bn4,bgpts(i))*Jac];
-    A=polyval(rn1*A1+rn2*A2,bgpts(i));
+             -polyval(bn4,bgpts(i))*Jac;
+             polyval(bn5,bgpts(i));
+             -polyval(bn6,bgpts(i))*Jac];
+    A=polyval(rn1*A1+rn2*A2+rn3*A3,bgpts(i));
     mb2=mb2+bgpw(i)*beamsfs*beamsfs'*rho*A*Jac;
   end
   
@@ -329,13 +333,14 @@ if strcmp(mode,'make')
   numrodgauss=numrodgauss+1; %Need more gauss points for the mass
                              %matrix. 
   [rgpts,rgpw]=gauss(numrodgauss);
-  mrod=zeros(2,2); %initialize empty mass matrix
-  mtor=zeros(2,2);
+  mrod=zeros(3,3); %initialize empty mass matrix
+  mtor=zeros(3,3);
   for i=1:numrodgauss
     rodsfs=[polyval(rn1,rgpts(i));
-            polyval(rn2,rgpts(i))];
-    J=polyval(rn1*(Iyy1+Izz1)+rn2*(Iyy2+Izz2),rgpts(i));
-    A=polyval(rn1*A1+rn2*A2,rgpts(i));
+            polyval(rn2,rgpts(i));
+            polyval(rn3,rgpts(i))];
+    J=polyval(rn1*(Iyy1+Izz1)+rn2*(Iyy2+Izz2)+rn3*(Iyy3+Izz3),rgpts(i));
+    A=polyval(rn1*A1+rn2*A2+rn3*A3,rgpts(i));
     mrod=mrod+rgpw(i)*rodsfs*rodsfs'*A*rho*Jac;
     mtor=mtor+rgpw(i)*rodsfs*rodsfs'*J*rho*Jac;
   end
