@@ -3,7 +3,7 @@ variables
 t=0.05
 l=5
 Ixx1=1/12*t^4
-Ixx2=1/12*(3/4*t)^4
+Ixx2=1/12*t^4
 Iyy1=Ixx1
 Iyy2=Ixx2
 J1=0.95*(Ixx1+Iyy1)
@@ -12,7 +12,7 @@ J2=0.95*(Ixx2+Iyy2)
 element properties
 % Beam format
 % E G rho A1     A2       A3   J1 J2 J3 Ixx1 Ixx2 Ixx3 Iyy1 Iyy2 Iyy3
-steel    t^2 (3/4*t)^2 J1 J2 Ixx1 Ixx2 Iyy1 Iyy2
+steel    t^2 t^2 J1 J2 Ixx1 Ixx2 Iyy1 Iyy2
 %Note that these were defined above. I can use variables in my input file.
 % I also used "steel" as a property. WFEM has some of these predefined. 
 % Run "units" and type "who" to see variables/values available inside your
@@ -66,20 +66,20 @@ nodes
 % node num, x y z, Node number isn't ever stored in nodes matrix
 1 0 l l 
 2 0 l 0 
-3 l l l-2*l*sin(pi/72)
-4 l l l*sin(pi/72)
-5 2*l l l-4*l*sin(pi/72)
-6 2*l l 2*l*sin(pi/72)
-7 3*l l l-6*l*sin(pi/72) 
-8 3*l l 3*l*sin(pi/72)
+3 l l-2*l*sin(pi/72) l-2*l*sin(pi/72)
+4 l l-2*l*sin(pi/72) l*sin(pi/72)
+5 2*l l-4*l*sin(pi/72) l-4*l*sin(pi/72)
+6 2*l l-4*l*sin(pi/72) 2*l*sin(pi/72)
+7 3*l l-6*l*sin(pi/72) l-6*l*sin(pi/72) 
+8 3*l l-6*l*sin(pi/72) 3*l*sin(pi/72)
 9 0 0 l 
 10 0 0 0 
-11 l 0 l-2*l*sin(pi/72)
-12 l 0 l*sin(pi/72)
-13 2*l 0 l-4*l*sin(pi/72)
-14 2*l 0 2*l*sin(pi/72)
-15 3*l 0 l-6*l*sin(pi/72) 
-16 3*l 0 3*l*sin(pi/72)
+11 l l*sin(pi/72) l-2*l*sin(pi/72)
+12 l l*sin(pi/72) l*sin(pi/72)
+13 2*l 2*l*sin(pi/72) l-4*l*sin(pi/72)
+14 2*l 2*l*sin(pi/72) 2*l*sin(pi/72)
+15 3*l 3*l*sin(pi/72) l-6*l*sin(pi/72) 
+16 3*l 3*l*sin(pi/72) 3*l*sin(pi/72)
 
 % need to figure out what this block is for
 points
@@ -92,12 +92,16 @@ fix clamp
 10
 % The preceeding put a clamp boundary condition on node 1.
 
+%fix pin
+%2 0 0 1
+%10 0 0 1
+
 load 
 % Node DOF Force
-7 2 -10
-8 2 -10
-15 2 -10
-16 2 -10
+7 3 -10
+8 3 -10
+15 3 -10
+16 3 -10
 
 
 actions

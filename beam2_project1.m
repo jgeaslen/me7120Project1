@@ -7,7 +7,7 @@ function out=beam2_project1(mode,b,c,d,e)
 % Third "node" defines the beam y plane and is actually from the
 % points array.
 %%
-% Defining beam element properties in wfem input file:
+% Defining beam element propertieswfe in wfem input file:
 % element properties
 %   E G rho A1 A2 J1 J2 Izz1 Izz2 Iyy1 Iyy2
 % Torsional rigidity, $J$, must be less than or equal
