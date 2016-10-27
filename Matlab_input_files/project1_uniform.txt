@@ -41,7 +41,8 @@ fix clamp
 % The preceeding put a clamp boundary condition on node 1.
 
 load 
-2 3 -10
+%2 3 -10
+2 3 -20
 
 actions
 modalanalysis
